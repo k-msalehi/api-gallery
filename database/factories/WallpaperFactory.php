@@ -21,9 +21,11 @@ class WallpaperFactory extends Factory
         $size = [500, 600, 700];
         $url = 'https://via.placeholder.com/' . $size[array_rand($size)] . 'x500.png?text=' . $fakeText;
         return [
+            'title' => $this->faker->words(2, true),
             'url' => $url,
-            'tags' => $tags,
+          //  'tags' => $tags,
             'user_id' => 1,
+            'likes' => rand(0,5)
         ];
     }
 }

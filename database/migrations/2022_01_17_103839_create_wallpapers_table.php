@@ -13,11 +13,13 @@ class CreateWallpapersTable extends Migration
      */
     public function up()
     {
-        Schema::create('wallpapers', function (Blueprint $table) {
+        Schema::create('wp-wallpapers', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('alt')->nullable()->default(null);
             $table->string('url', 1024);
-            $table->text('tags');
             $table->foreignId('user_id')->constrained();
+            $table->unsignedInteger('likes')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateWallpapersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wallpepers');
+        Schema::dropIfExists('wp-wallpepers');
     }
 }

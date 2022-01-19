@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Wallpaper;
 
-use App\Http\Controllers\BaseController;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Wallpaper as ResourcesWallpaper;
+use App\Http\Resources\WallpaperCollection;
+use App\Http\Resources\WallpaperResource;
+use App\Models\Tag;
 use App\Models\Wallpaper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,59 +16,98 @@ class WallpaperController extends BaseController
 {
     public function index()
     {
-        $blogs = Wallpaper::all();
-        return $this->sendResponse(ResourcesWallpaper::collection($blogs), 'Posts fetched.');
+        $data = new WallpaperCollection(Wallpaper::paginate($this->perPage));
+        // return Response::json($data, 200);
+
+        return $this->sendResponse($data, 'Posts fetched.');
+    }
+    public function showByTag(Tag $tag)
+    {
+        $wallpapers = $tag->wallpapers();
+        $data = new WallpaperCollection($wallpapers->cursorPaginate($this->perPage));
+        // return Response::json($data, 200);
+
+        return $this->sendResponse($data, 'Posts fetched.');
     }
 
-    
+
     public function store(Request $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
+        $data = $request->all();
+        $data['url'] = str_replace(
+            ['%3A', '%2F', '%3F', '%3D'],
+            [':', '/', '?', '='],
+            rawurlencode($data['url'])
+        );
+        $validator = Validator::make($data, [
             'title' => 'required',
-            'description' => 'required'
-        ]);
-        if($validator->fails()){
-            return $this->sendError($validator->errors());       
-        }
-        $blog = Wallpaper::create($input);
-        return $this->sendResponse(new BlogResource($blog), 'Post created.');
-    }
-
-   
-    public function show($id)
-    {
-        $blog = Wallpaper::find($id);
-        if (is_null($blog)) {
-            return $this->sendError('Post does not exist.');
-        }
-        return $this->sendResponse(new BlogResource($blog), 'Post fetched.');
-    }
-    
-
-    public function update(Request $request, Wallpaper $blog)
-    {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'title' => 'required',
-            'description' => 'required'
+            'url' => 'required|url|unique:wp-wallpapers,url',
+            'likes' => 'nullable|numeric',
+            'alt' => 'nullable',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|exists:App\Models\Tag,id',
         ]);
 
-        if($validator->fails()){
-            return $this->sendError($validator->errors());       
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors());
+        }
+        $data['user_id'] = auth()->user()->id;
+        $wallpaper = Wallpaper::create($data);
+        if (isset($data['tags']))
+            $wallpaper->tags()->attach($data['tags']);
+        return $this->sendResponse(new WallpaperResource($wallpaper), 'Wallpaper created.');
+    }
+
+
+    public function show(Wallpaper $wallpaper)
+    {
+        // $wallpaper = Wallpaper::find($id);
+        if (is_null($wallpaper)) {
+            return $this->sendError('Wallpaper does not exist.');
+        }
+        return $this->sendResponse(new WallpaperResource($wallpaper), 'Wallpaper fetched.');
+    }
+
+
+    public function update(Request $request, Wallpaper $wallpaper)
+    {
+        $urlExist = Wallpaper::where('url', $request->url)->where('id', '<>', $wallpaper->id)->first();
+        if ($urlExist) {
+            $error['url'] = 'URL already taken';
+            return $this->sendError($error);
+        }
+        $data = $request->all();
+        $data['url'] = str_replace(
+            ['%3A', '%2F', '%3F', '%3D'],
+            [':', '/', '?', '='],
+            rawurlencode($data['url'])
+        );
+        $validator = Validator::make($data, [
+            'title' => 'required',
+            'likes' => 'nullable|numeric',
+            'alt' => 'nullable',
+            'url' => 'required|url',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|exists:App\Models\Tag,id',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors());
         }
 
-        $blog->title = $input['title'];
-        $blog->description = $input['description'];
-        $blog->save();
-        
-        return $this->sendResponse(new BlogResource($blog), 'Post updated.');
+        $wallpaper->title = $request->title;
+        $wallpaper->likes = $request->get('likes', $wallpaper->likes);
+        $wallpaper->alt = $request->get('alt', $wallpaper->alt);
+        $wallpaper->save();
+        if (isset($data['tags']))
+            $wallpaper->tags()->sync($data['tags']);
+
+        return $this->sendResponse(new WallpaperResource($wallpaper), 'Wallpaper updated.');
     }
-   
-    public function destroy(Wallpaper $blog)
+
+    public function destroy(Wallpaper $wallpaper)
     {
-        $blog->delete();
-        return $this->sendResponse([], 'Post deleted.');
+        $wallpaper->delete();
+        return $this->sendResponse([], 'Wallpaper deleted.');
     }
 }

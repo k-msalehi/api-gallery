@@ -3,8 +3,11 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Wallpaper\Image;
+use App\Http\Controllers\Wallpaper\InfoController;
+use App\Http\Controllers\Wallpaper\TagController;
 use App\Http\Controllers\Wallpaper\WallpaperController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,17 +20,26 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// Route::get('/',function(){
+//     echo 'hello';
+// });
+// Route::get('/db',function(){
+//     Artisan::call("migrate:fresh --seed");
+//     dd("done");
+// });
 
-Route::post('/tokens/create', function (Request $request) {
-    $token = $request->user()->createToken($request->token_name);
-
-    return ['token' => $token->plainTextToken];
-});
 Route::post('login', [AuthController::class, 'signin']);
 Route::post('register', [AuthController::class, 'signup']);
+Route::get('test', [AuthController::class, 'test'])->middleware(['auth:sanctum']);
+Route::prefix('wallpaper')->group(function () {
+    Route::get('info', [InfoController::class, 'index']);
+    Route::get('wallpapers', [WallpaperController::class, 'index']);
+    Route::get('wallpapers/show/{wallpaper}', [WallpaperController::class, 'show']);
+    Route::get('wallpapers/tag/{tag}', [WallpaperController::class, 'showByTag']);
 
+    Route::post('wallpapers', [WallpaperController::class, 'store'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
+    Route::patch('wallpapers/{wallpaper}', [WallpaperController::class, 'update'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
 
-Route::get('wallpapers', [WallpaperController::class, 'index']);
-Route::get('wallpapers', [WallpaperController::class, 'index'])->middleware(['auth:sanctum']);
-Route::get('wallpapers/create', [WallpaperController::class, 'create'])->middleware(['auth:sanctum']);
-Route::resource('wallpaper', WallpaperController::class);
+    Route::post('tags', [TagController::class, 'store'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
+    Route::patch('tags/{tag}', [TagController::class, 'update'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
+});

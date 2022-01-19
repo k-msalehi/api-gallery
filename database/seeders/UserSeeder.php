@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
+                'role' => ROLE_WP_MANAGER,
                 'password' => bcrypt('123'),
             ],
         ]);

@@ -9,8 +9,16 @@ class Wallpaper extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $casts = [
-        'tags' => 'array'
+    protected $table = 'wp-wallpapers';
+    protected $fillable=[
+     'title',   
+     'alt',   
+     'likes',   
+     'url',   
+     'user_id',   
     ];
-
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class,'wp-tag_wallpaper');
+    }
 }

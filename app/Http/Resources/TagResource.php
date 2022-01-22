@@ -14,6 +14,12 @@ class TagResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $image = ($this->wallpapers->first() !== null) ? $this->wallpapers->first()->url : null;
+        return [
+            'id' => $this->id,
+            'slug' => ($this->slug),
+            'title' => $this->title,
+            'image' => $image,
+        ];
     }
 }

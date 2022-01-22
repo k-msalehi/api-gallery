@@ -34,6 +34,7 @@ Route::get('test', [AuthController::class, 'test'])->middleware(['auth:sanctum']
 Route::prefix('wallpaper')->group(function () {
     Route::get('info', [InfoController::class, 'index']);
     Route::get('wallpapers', [WallpaperController::class, 'index']);
+    Route::get('tags', [TagController::class, 'index']);
     Route::get('wallpapers/show/{wallpaper}', [WallpaperController::class, 'show']);
     Route::get('wallpapers/tag/{tag}', [WallpaperController::class, 'showByTag']);
 

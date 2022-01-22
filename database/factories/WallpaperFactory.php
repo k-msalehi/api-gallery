@@ -17,15 +17,16 @@ class WallpaperFactory extends Factory
         shuffle($tags);
         $tagsNumber = rand(0, 4);
         $tags = json_encode(array_slice($tags, 0, $tagsNumber));
-        $fakeText = $this->faker->words(2, true);
-        $size = [500, 600, 700];
-        $url = 'https://via.placeholder.com/' . $size[array_rand($size)] . 'x500.png?text=' . $fakeText;
+        // $fakeText = $this->faker->words(2, true);
+        $size = [400,500, 600, 700];
+        // $url = 'https://via.placeholder.com/' . $size[array_rand($size)] . 'x500.png?text=' . $fakeText;
+        $url = 'https://picsum.photos/id/' . rand(1, 1050) . '/' . $size[array_rand($size)] . '/' . $size[array_rand($size)];
         return [
             'title' => $this->faker->words(2, true),
             'url' => $url,
-          //  'tags' => $tags,
+            //  'tags' => $tags,
             'user_id' => 1,
-            'likes' => rand(0,5)
+            'likes' => rand(0, 5)
         ];
     }
 }

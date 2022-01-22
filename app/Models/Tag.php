@@ -19,6 +19,6 @@ class Tag extends Model
     }
     public function wallpapers()
     {
-        return $this->belongsToMany(Wallpaper::class, 'wp-tag_wallpaper');
+        return $this->belongsToMany(Wallpaper::class, 'wp-tag_wallpaper')->orderBy('id','DESC');
     }
 }

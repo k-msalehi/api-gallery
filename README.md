@@ -140,9 +140,10 @@ Output:
 ---
 
 /wallpaper/wallpapers/tag/{slug}
-Same as `wallpaper/wallpapers` with requested tag
----
 
+Same as `/wallpaper/wallpapers` with requested tag
+
+---
 /wallpaper/tags
 
 Output:

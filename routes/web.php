@@ -1,13 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\Wallpaper\Image;
 use App\Http\Controllers\Wallpaper\InfoController;
 use App\Http\Controllers\Wallpaper\TagController;
 use App\Http\Controllers\Wallpaper\WallpaperController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::get('/',function(){
-//     echo 'hello';
-// });
+Route::get('/',function(){
+    echo 'hello';
+});
 // Route::get('/db',function(){
 //     Artisan::call("migrate:fresh --seed");
 //     dd("done");
@@ -34,9 +30,9 @@ Route::get('test', [AuthController::class, 'test'])->middleware(['auth:sanctum']
 Route::prefix('wallpaper')->group(function () {
     Route::get('info', [InfoController::class, 'index']);
     Route::get('wallpapers', [WallpaperController::class, 'index']);
-    Route::get('tags', [TagController::class, 'index']);
-    Route::get('wallpapers/show/{wallpaper}', [WallpaperController::class, 'show']);
+    Route::get('wallpapers/{wallpaper}', [WallpaperController::class, 'show']);
     Route::get('wallpapers/tag/{tag}', [WallpaperController::class, 'showByTag']);
+    Route::get('tags', [TagController::class, 'index']);
 
     Route::post('wallpapers', [WallpaperController::class, 'store'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
     Route::patch('wallpapers/{wallpaper}', [WallpaperController::class, 'update'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);

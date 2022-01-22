@@ -2,6 +2,7 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 ## Endpoints
 
 /wallpaper/wallpapers
+
 Output:
 ```
 {
@@ -86,6 +87,7 @@ Output:
 ---
 
 /wallpaper/wallpapers/{id}
+
 Output:
 ```{
   "success": true,
@@ -142,6 +144,7 @@ Same as `wallpaper/wallpapers` with requested tag
 ---
 
 /wallpaper/tags
+
 Output:
 ```
 [

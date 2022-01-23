@@ -19,7 +19,7 @@ class WallpaperController extends BaseController
         $data = new WallpaperCollection(Wallpaper::paginate($this->perPage));
         // return Response::json($data, 200);
 
-        return $this->sendResponse($data, 'Posts fetched.');
+        return $this->sendResponse($data, 'Wallpaper fetched.');
     }
     public function showByTag(Tag $tag)
     {
@@ -27,7 +27,7 @@ class WallpaperController extends BaseController
         $data = new WallpaperCollection($wallpapers->cursorPaginate($this->perPage));
         // return Response::json($data, 200);
 
-        return $this->sendResponse($data, 'Posts fetched.');
+        return $this->sendResponse($data, 'Wallpaper fetched.');
     }
 
 

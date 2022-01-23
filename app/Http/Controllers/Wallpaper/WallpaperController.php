@@ -71,6 +71,7 @@ class WallpaperController extends BaseController
 
     public function update(Request $request, Wallpaper $wallpaper)
     {
+        $data = $request->all();
         $validator = Validator::make($data, [
             'title' => 'required',
             'likes' => 'nullable|numeric',
@@ -87,7 +88,6 @@ class WallpaperController extends BaseController
             $error['url'] = 'URL already taken';
             return $this->sendError($error);
         }
-        $data = $request->all();
         $data['url'] = str_replace(
             ['%3A', '%2F', '%3F', '%3D'],
             [':', '/', '?', '='],

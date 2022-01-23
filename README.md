@@ -180,8 +180,6 @@ Output:
 ---
 **Login and get API token**
 
-*Login must have Authorization Header Using Bearer Token*.  
-Exapmle:<br> `Authorization: Bearer 1|PnZaOacPyHjjOA7eOcSJT33VxJuvUo8TGVBnW186`
 
 `POST /login`  
 Output:
@@ -193,5 +191,113 @@ Output:
     "name": "admin"
   },
   "message": "User signed in"
+}
+```
+---
+**All CRUD actions must have Authorization Header Using Bearer Token**
+ 
+Exapmle:<br> `Authorization: Bearer 1|PnZaOacPyHjjOA7eOcSJT33VxJuvUo8TGVBnW186`
+
+---
+
+**Create a new image/wallpaper**
+
+`POST  /wallpaper/wallpapers`
+
+Params:
+
+- `title` image title
+- `url` image full URL
+- `likes` number of liker
+- `tags[]` (as array) each wallpaper/image can have multiple tags 
+
+After successful image creation, system will return created Item.
+```
+{
+  "success": true,
+  "data": {
+    "id": 52,
+    "url": "https://via.placeholder.coem/500x500.png?text=repudiandae%20w",
+    "title": "yes",
+    "tags": [
+      {
+        "id": 1,
+        "title": "طبیعت",
+        "slug": "nature",
+        "created_at": null,
+        "updated_at": null,
+        "pivot": {
+          "wallpaper_id": 52,
+          "tag_id": 1
+        }
+      },
+      {
+        "id": 2,
+        "title": "آیفون",
+        "slug": "iphone",
+        "created_at": null,
+        "updated_at": null,
+        "pivot": {
+          "wallpaper_id": 52,
+          "tag_id": 2
+        }
+      }
+    ],
+    "likes": null,
+    "created_at": "2022-01-23",
+    "updated_at": "2022-01-23"
+  },
+  "message": "Wallpaper created."
+}
+```
+
+**Update a wallpaper**
+
+`POST http://localhost:8000/wallpaper/wallpapers/{id}`
+
+Params:
+
+- `title` image new title
+- `url` image new full URL
+- `likes` number of liker
+- `tags[]` (as array) each wallpaper/image can have multiple tags 
+
+After successful image update, system will return created Item.
+```
+{
+  "success": true,
+  "data": {
+    "id": 52,
+    "url": "https://via.placeholder.coem/500x500.png?text=repudiandae%20w",
+    "title": "yes",
+    "tags": [
+      {
+        "id": 1,
+        "title": "طبیعت",
+        "slug": "nature",
+        "created_at": null,
+        "updated_at": null,
+        "pivot": {
+          "wallpaper_id": 52,
+          "tag_id": 1
+        }
+      },
+      {
+        "id": 2,
+        "title": "آیفون",
+        "slug": "iphone",
+        "created_at": null,
+        "updated_at": null,
+        "pivot": {
+          "wallpaper_id": 52,
+          "tag_id": 2
+        }
+      }
+    ],
+    "likes": 0,
+    "created_at": "2022-01-23",
+    "updated_at": "2022-01-23"
+  },
+  "message": "Wallpaper updated."
 }
 ```

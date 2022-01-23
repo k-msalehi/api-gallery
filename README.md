@@ -1,7 +1,8 @@
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 ## Endpoints
 
-Get all images<br>
+**Get all images**
+
 `GET /wallpaper/wallpapers`
 
 Output:
@@ -82,12 +83,13 @@ Output:
       "has_more": true
     }
   },
-  "message": "Posts fetched."
+  "message": "Wallpapers fetched."
 }
 ```
 ---
 
-Get a single image by id  
+**Get a single image by id**
+
 `GET /wallpaper/wallpapers/{id}`
 
 Output:
@@ -141,13 +143,15 @@ Output:
 ```
 ---
 
-Get All images with specific tag  
+**Get All images with specific tag**
+
 `GET /wallpaper/wallpapers/tag/{slug}`
 
 Output is same as `/wallpaper/wallpapers` with requested tag
 
 ---
-Get all tags
+**Get all tags**
+
 `GET /wallpaper/tags`
 
 Output:
@@ -172,4 +176,22 @@ Output:
     "image": "https://picsum.photos/id/988/400/400"
   }
 ]
+```
+---
+**Login and get API token**
+
+*Login must have Authorization Header Using Bearer Token*.  
+Exapmle:<br> `Authorization: Bearer 1|PnZaOacPyHjjOA7eOcSJT33VxJuvUo8TGVBnW186`
+
+`POST /login`  
+Output:
+```
+{
+  "success": true,
+  "data": {
+    "token": "1|hkJQ8NaCXGLtS13G6LhVK5BvtJKxZI4Sz07h3ogK",
+    "name": "admin"
+  },
+  "message": "User signed in"
+}
 ```

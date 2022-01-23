@@ -261,6 +261,7 @@ Params:
 - `url` image new full URL
 - `likes` number of liker
 - `tags[]` (as array) each wallpaper/image can have multiple tags 
+- `_method` MUST quals to 'PATCH'
 
 After successful image update, system will return created Item.
 ```

@@ -1,7 +1,8 @@
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 ## Endpoints
 
-/wallpaper/wallpapers
+Get all images<br>
+`GET /wallpaper/wallpapers`
 
 Output:
 ```
@@ -86,7 +87,8 @@ Output:
 ```
 ---
 
-/wallpaper/wallpapers/{id}
+Get a single image by id  
+`GET /wallpaper/wallpapers/{id}`
 
 Output:
 ```{
@@ -139,12 +141,14 @@ Output:
 ```
 ---
 
-/wallpaper/wallpapers/tag/{slug}
+Get All images with specific tag  
+`GET /wallpaper/wallpapers/tag/{slug}`
 
 Same as `/wallpaper/wallpapers` with requested tag
 
 ---
-/wallpaper/tags
+Get all tags
+`GET /wallpaper/tags`
 
 Output:
 ```

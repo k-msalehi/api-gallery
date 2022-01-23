@@ -24,7 +24,7 @@ class WallpaperController extends BaseController
     public function showByTag(Tag $tag)
     {
         $wallpapers = $tag->wallpapers();
-        $data = new WallpaperCollection($wallpapers->cursorPaginate($this->perPage));
+        $data = new WallpaperCollection($wallpapers->paginate($this->perPage));
         // return Response::json($data, 200);
 
         return $this->sendResponse($data, 'Wallpaper fetched.');
@@ -71,6 +71,17 @@ class WallpaperController extends BaseController
 
     public function update(Request $request, Wallpaper $wallpaper)
     {
+        $validator = Validator::make($data, [
+            'title' => 'required',
+            'likes' => 'nullable|numeric',
+            'alt' => 'nullable',
+            'url' => 'required|url',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|exists:App\Models\Tag,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors());
+        }
         $urlExist = Wallpaper::where('url', $request->url)->where('id', '<>', $wallpaper->id)->first();
         if ($urlExist) {
             $error['url'] = 'URL already taken';
@@ -82,18 +93,9 @@ class WallpaperController extends BaseController
             [':', '/', '?', '='],
             rawurlencode($data['url'])
         );
-        $validator = Validator::make($data, [
-            'title' => 'required',
-            'likes' => 'nullable|numeric',
-            'alt' => 'nullable',
-            'url' => 'required|url',
-            'tags' => 'nullable|array',
-            'tags.*' => 'nullable|exists:App\Models\Tag,id',
-        ]);
 
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors());
-        }
+
+
 
         $wallpaper->title = $request->title;
         $wallpaper->likes = $request->get('likes', $wallpaper->likes);

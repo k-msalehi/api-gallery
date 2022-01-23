@@ -144,7 +144,7 @@ Output:
 Get All images with specific tag  
 `GET /wallpaper/wallpapers/tag/{slug}`
 
-Same as `/wallpaper/wallpapers` with requested tag
+Output is same as `/wallpaper/wallpapers` with requested tag
 
 ---
 Get all tags

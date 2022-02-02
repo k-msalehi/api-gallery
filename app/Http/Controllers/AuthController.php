@@ -11,6 +11,7 @@ class AuthController extends CommonController
 {
     public function signin(Request $request)
     {
+       // dd($request->all());
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $authUser = Auth::user();
             switch ($authUser->role) {
@@ -22,7 +23,7 @@ class AuthController extends CommonController
 
             return $this->sendResponse($success, 'User signed in');
         } else {
-            return $this->sendError('Unauthorized.', ['error' => 'Unauthorized']);
+            return $this->sendError('Unauthorized.', ['error' => 'invalid login data']);
         }
     }
 

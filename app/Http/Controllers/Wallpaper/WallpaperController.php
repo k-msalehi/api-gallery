@@ -16,7 +16,7 @@ class WallpaperController extends BaseController
 {
     public function index()
     {
-        $data = new WallpaperCollection(Wallpaper::paginate($this->perPage));
+        $data = new WallpaperCollection(Wallpaper::orderBy('id','DESC')->paginate($this->perPage));
         // return Response::json($data, 200);
 
         return $this->sendResponse($data, 'Wallpaper fetched.');
@@ -34,11 +34,11 @@ class WallpaperController extends BaseController
     public function store(Request $request)
     {
         $data = $request->all();
-        $data['url'] = str_replace(
-            ['%3A', '%2F', '%3F', '%3D'],
-            [':', '/', '?', '='],
-            rawurlencode($data['url'])
-        );
+        // $data['url'] = str_replace(
+        //     ['%3A', '%2F', '%3F', '%3D','%20'],
+        //     [':', '/', '?', '=',' '],
+        //     rawurlencode($data['url'])
+        // );
         $validator = Validator::make($data, [
             'title' => 'required',
             'url' => 'required|url|unique:wp-wallpapers,url',
@@ -93,10 +93,6 @@ class WallpaperController extends BaseController
             [':', '/', '?', '='],
             rawurlencode($data['url'])
         );
-
-
-
-
         $wallpaper->title = $request->title;
         $wallpaper->likes = $request->get('likes', $wallpaper->likes);
         $wallpaper->alt = $request->get('alt', $wallpaper->alt);
@@ -109,6 +105,7 @@ class WallpaperController extends BaseController
 
     public function destroy(Wallpaper $wallpaper)
     {
+        $wallpaper->tags()->detach();
         $wallpaper->delete();
         return $this->sendResponse([], 'Wallpaper deleted.');
     }

@@ -19,7 +19,7 @@ class TagController extends BaseController
     public function index()
     {
 
-     //   $data = new TagCollection(Tag::cursorPaginate($this->perPage));
+        //   $data = new TagCollection(Tag::cursorPaginate($this->perPage));
         $data = TagResource::collection(Tag::all());
         return Response::json($data, 200);
 
@@ -35,7 +35,6 @@ class TagController extends BaseController
     public function store(Request $request)
     {
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '-', $data['slug']);
         $validator = Validator::make($data, [
             'title' => 'required',
             'slug' => 'required|alpha_dash|unique:wp-tags,slug',
@@ -43,6 +42,7 @@ class TagController extends BaseController
         if ($validator->fails()) {
             return $this->sendError($validator->errors());
         }
+        $data['slug'] = str_replace(' ', '-', $data['slug']);
         $data['user_id'] = auth()->user()->id;
         $tag = Tag::create($data);
         return $this->sendResponse(new TagResource($tag), 'Tag created.');
@@ -59,7 +59,7 @@ class TagController extends BaseController
         if (is_null($tag)) {
             return $this->sendError('Wallpaper does not exist.');
         }
-        return $this->sendResponse(new TagResource($tag), 'Wallpaper fetched.');
+        return $this->sendResponse(new TagResource($tag), 'tag fetched.');
     }
 
     /**
@@ -102,6 +102,8 @@ class TagController extends BaseController
      */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->wallpapers()->detach();
+        $tag->delete();
+        return $this->sendResponse([], 'tag deleted.');
     }
 }

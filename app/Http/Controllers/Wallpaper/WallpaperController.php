@@ -94,6 +94,7 @@ class WallpaperController extends BaseController
             rawurlencode($data['url'])
         );
         $wallpaper->title = $request->title;
+        $wallpaper->url = $request->url;
         $wallpaper->likes = $request->get('likes', $wallpaper->likes);
         $wallpaper->alt = $request->get('alt', $wallpaper->alt);
         $wallpaper->save();

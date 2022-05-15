@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Survey\Order;
 use App\Http\Controllers\Wallpaper\InfoController;
 use App\Http\Controllers\Wallpaper\TagController;
 use App\Http\Controllers\Wallpaper\WallpaperController;
@@ -51,4 +52,8 @@ Route::prefix('wallpaper')->group(function () {
 
     Route::post('tags', [TagController::class, 'store'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
     Route::patch('tags/{tag}', [TagController::class, 'update'])->middleware(['auth:sanctum', 'ability:wallpaper:manage']);
+});
+
+Route::prefix('survey')->group(function () {
+    Route::post('order/insert', [Order::class, 'insert']);
 });
